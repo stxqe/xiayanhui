@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+</head>
+<body style="height: 100%">
+<div style="float: left;margin-left:6%;width: 88%;border-bottom: solid 2px #398C9C;background-color:white;height: 10%">
+    <img style="width: 30%;height: 30%" src="img/logo-03.png">
+    <div style="background: #39A09C;width: 5px;height: 16px;float:right;margin-top: 3.8%"></div>
+    <div style="font-family: PingFangSC-Medium;font-size: 18px;color: #485465;line-height: 20px;margin-right: 10px;margin-top: 3.6%;float: right;">基因信息</div>
+</div>
+<div style="float:left;margin-left: 6%;margin-top:1.6%;width: 88%;height: 20%">
+    <!--<textarea id="label"></textarea>-->
+    <div id="result" style="background-color:#D8EBEA;padding: 15px"></div>
+</div>
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="float: left;margin-left: 6%;margin-top: 0.6%;width: 88%;height: 500px">
+
+        <ul class="layui-tab-title">
+            <li class="layui-this"><a id = "targets" href="javascript:;" onclick="targets()">Clinically Relevant Alterations</a></li>
+            <li><a id = "geneVariations" href="javascript:;" onclick="riations()">All Annotated Alterations</a></li>
+        </ul>
+       <div class="layui-tab-content" style="float:left;margin-top: 0.6%;width: 98%">
+            <div class="layui-tab-item layui-show" id="tar_js" style="float: left;width: 100%">
+                <input id="name1" type="text" style="height: 20px;padding-left:10px;float:right;border: 1px;box-shadow: 1px 1px 6px #bfbfbf" placeholder="Search" list="select1">
+                <datalist id="select1"></datalist>
+                <table id="target" lay-filter="test" style="margin-top: 15px"></table>
+            </div>
+            <div class="layui-tab-item" id="var_js" style="float: left;width: 100%">
+                <input id="name2" type="text" style="height: 20px;padding-left:10px;float:right;border: 1px;box-shadow: 1px 1px 6px #bfbfbf" placeholder="Search" list="select2">
+                <datalist id="select2"></datalist>
+                <table id="variations" lay-filter="testtwo" style="margin-top: 15px"></table>
+            </div>
+        </div>
+    <!--<a id = "targets" href="javascript:;" onclick="targets()">Clinically Relevant Alterations</a> &nbsp;/&nbsp;
+    <a id = "geneVariations" href="javascript:;" onclick="riations()">All Annotated Alterations</a>-->
+</div>
+<!--<div style="float:left;margin-top: 0.6%;margin-left: 6%;width: 88%">
+    <div id="tar_js" style="float: left;width: 100%">
+        <input id="name1" type="text" style="height: 20px;padding-left:10px;float:right;border: 1px;box-shadow: 1px 1px 6px #bfbfbf" placeholder="Search" list="select1">
+        <datalist id="select1"></datalist>
+        <table id="target" lay-filter="test" style="margin-top: 15px"></table>
+    </div>
+    <div id="var_js" style="float: left;display: none;width: 100%">
+        <input id="name2" type="text" style="height: 20px;padding-left:10px;float:right;border: 1px;box-shadow: 1px 1px 6px #bfbfbf" placeholder="Search" list="select2">
+        <datalist id="select2"></datalist>
+        <table id="variations" lay-filter="test" style="margin-top: 15px"></table>
+    </div>
+</div>-->
+
+<script type="text/javascript" src="js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    init();
+    function init() {
+        var geneName = getUrlParam("geneName");
+        //$("#label").val(geneName);
+        $.ajax({
+            type: 'get',
+            url: '/gad/search/'+geneName,
+            async: false,
+            success: function (data) {
+                $("#result").html("基因： " + data.geneName + "</br>基因ID： " + data.geneID + "</br>是否致癌基因： " + data.oncogene + "</br>最高证据等级： Level " + data.highLevelSen + " Level " + data.highLevelRes + "</br>基因信息："+ data.geneDescCHN);
+            }
+        });
+    }
+
+    layui.use('element', function(){
+        var element = layui.element;
+
+        //…
+    });
+
+    layui.use('table', function() {
+        var table = layui.table;
+        var tableTar = table.render({
+            elem: '#target'
+            ,height: '422'
+            ,url: '/tar/aboutGene' //数据接口
+            , autoSort: false
+            /*,page: true //开启分页
+            ,request: {
+                pageName: 'curr' //页码的参数名称，默认：page
+                ,limitName: 'nums' //每页数据量的参数名，默认：limit
+            }*/
+            , where :{
+                geneName : getUrlParam("geneName")
+            }
+            ,cols: [[ //表头
+                {field: 'alteration', title: '突变', width:110, fixed: 'left', sort: true}
+                ,{field: 'canTypeCHN', title: '癌种', width:150, sort: true}
+                ,{field: 'drug', title: '药物', width:150, sort: true ,templet: '<div><a href="targets.html?drugName={{d.drug}}" class="layui-table-link">{{d.drug}}</a></div>'}
+                ,{field: 'drugCHN', title: '药物中文名', width:180, templet: function (d) {
+                        if (d.drugCHN == '-')
+                            return d.title || '';
+                        else
+                            return d.title = d.drugCHN
+                    }}
+                ,{field: 'level', title: '证据等级', width: 110 ,sort: true,templet: '<div><a href="targets.html?level={{d.level}}" class="layui-table-link">{{d.level}}</a></div>'}
+                ,{field: 'evidenceCHN', title: '证据支持'}
+                ,{field: 'pmids', title: '参考来源', width: 300}
+            ]]
+            ,parseData: function(res){
+                var data = res.data;
+                var value = '';
+                for (var i = 0; i < data.length; i++) {
+                    var v = data[i];
+                    if(value.indexOf(v.alteration[0])==-1){
+                        $("#select1").append("<option value='" + v.alteration + "'></option>")
+                        value += v.alteration;
+                    }
+                    //$("#select1").append("<option value='"+v.alteration+"'></option>")
+                }
+            }
+            , done : function (res, curr, count) {
+                var that = this.elem.next();
+                var tab = that.find(".layui-table-box").css("border-bottom", "3px solid #39A09C");
+                var th = that.find(".layui-table-header thead th").css("border-bottom", "3px solid #39A09C");
+                th.css("border-top", "3px solid #39A09C");
+                res.data.forEach(function (item,index) {
+                    if(index%2==0){
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#D8EBEA");
+                    } else{
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "white");
+                    }
+
+                })
+            }
+        });
+
+        table.on('sort(test)', function(obj){ //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            console.log(obj.field); //当前排序的字段名
+            console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+            console.log(this); //当前排序的 th 对象
+
+            //尽管我们的 table 自带排序功能，但并没有请求服务端。
+            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+            tableTar.reload({
+                initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                ,where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                    field: obj.field //排序字段
+                    ,order: obj.type //排序方式
+                }
+            });
+        });
+
+        $("#name1").change(function(){
+            //$("#select1").remove();
+            tableTar.reload(
+                {
+                    where: {
+                        alteration : $("#name1").val()
+                        ,geneName : getUrlParam("geneName")
+                    }
+                }
+            );
+
+        });
+
+        var tableVar = table.render({
+            elem: '#variations'
+            ,height: '422'
+            ,url: '/tar/aboutVar' //数据接口
+            , autoSort: false
+            ,where :{
+                geneName : getUrlParam("geneName")
+            }
+            ,cols: [[ //表头
+                {field: 'alteration', title: '突变', width:140, fixed: 'left', sort: true}
+                ,{field: 'oncogenicityCHN', title: '致癌性', width:140, sort: true}
+                ,{field: 'mutEffectCHN', title: '突变影响', width:180}
+                ,{field: 'varSummaryCHN', title: '变异说明'}
+                ,{field: 'pmids', title: '参考来源', width: 300}
+            ]]
+            ,parseData: function(res){
+                var data = res.data;
+                var value = '';
+                for (var i = 0; i < data.length; i++) {
+                    var v = data[i];
+                    if(value.indexOf(v.alteration[0])==-1){
+                        $("#select2").append("<option value='" + v.alteration + "'></option>")
+                        value += v.alteration;
+                    }
+                    /*$("#select2").append("<option value='"+v.alteration+"'></option>")*/
+                }
+            }
+            , done : function (res, curr, count) {
+                var that = this.elem.next();
+                var tab = that.find(".layui-table-box").css("border-bottom", "3px solid #39A09C");
+                var th = that.find(".layui-table-header thead th").css("border-bottom", "3px solid #39A09C");
+                th.css("border-top", "3px solid #39A09C");
+                res.data.forEach(function (item,index) {
+                    if(index%2==0){
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#D8EBEA");
+                    } else{
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "white");
+                    }
+
+                })
+            }
+        });
+
+        table.on('sort(testtwo)', function(obj){ //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            console.log(obj.field); //当前排序的字段名
+            console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+            console.log(this); //当前排序的 th 对象
+
+            //尽管我们的 table 自带排序功能，但并没有请求服务端。
+            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+            tableVar.reload({
+                initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                ,where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                    field: obj.field //排序字段
+                    ,order: obj.type //排序方式
+                }
+            });
+        });
+
+        $("#name2").change(function(){
+            tableVar.reload(
+                {
+                    where :{
+                        alteration : $("#name2").val()
+                        ,geneName : getUrlParam("geneName")
+                    }
+                }
+            );
+        });
+    });
+
+/*    function targets() {
+        $("#tar_js").show();
+        $("#var_js").hide()
+    }
+
+    function riations() {
+        $("#tar_js").hide();
+        $("#var_js").show()
+    }*/
+
+</script>
+</body>
+</html>

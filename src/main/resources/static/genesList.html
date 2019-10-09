@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Genes</title>
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/dataTables.bootstrap.min.css">
+    <style type="text/css">
+        .clear {
+            display: none;
+        }
+
+        .input::-ms-clear {
+            display: none;
+        }
+
+        .input:valid + .clear {
+            display: inline;
+        }
+    </style>
+</head>
+<body style="width: 100%;height: 100%;margin:0; padding:0">
+<div style="float: left;margin-left:6%;width: 88%;height:10%;border-bottom: solid 2px #398C9C;background-color:white">
+    <img style="width: 30%;height: 30%" src="img/logo-03.png">
+    <div style="background: #39A09C;width: 5px;height: 16px;float:right;margin-top: 3.8%"></div>
+    <div style="font-family: PingFangSC-Medium;font-size: 18px;color: #485465;line-height: 20px;margin-right: 10px;margin-top: 3.6%;float: right;">基因列表</div>
+</div>
+
+
+<!--<div class="form-group" style="float:right;margin-right: 100px">
+</div>-->
+<div style="float:left;margin-left: 6%;margin-top: 1.5%;width: 88%;height:550px;">
+    <button id="searchBt" class="layui-btn layui-btn-sm" style="background-color: #2D6F7F;float: right"><i class="layui-icon">&#xe615;</i>搜索</button>
+    <input id="name" type="text" class="input" style="height: 30px; padding-left:10px;float:right" placeholder="基因名称" list="select" required>
+<!--    <div class="clear" style="float:right;margin-top: 5px;cursor:pointer;">
+        <i class="layui-icon" href="javascript:;" id="clear1" onclick="cleared()">&#x1006;</i>
+    </div>-->
+    <datalist id="select"></datalist>
+    <table id="demo" lay-filter="test" style="margin-top: 30px;"></table>
+</div>
+
+<script type="text/javascript" src="js/libs/jquery-2.1.1.min.js"></script>
+<script src="layui/layui.js"></script>
+
+<script>
+    layui.use('table', function() {
+        var table = layui.table;
+        var tableObj=table.render({
+            elem: '#demo'
+            ,height: '500'
+            ,url: '/gad/geneListPage' //数据接口
+            , autoSort: false
+            ,page: true //开启分页
+            ,request: {
+                pageName: 'curr' //页码的参数名称，默认：page
+                ,limitName: 'nums' //每页数据量的参数名，默认：limit
+            }
+            ,cols: [[ //表头
+                {field: 'geneName', title: '基因', width:150, fixed: 'left',sort: true, templet: '<div><a href="searchResult.html?geneName={{d.geneName}}" class="layui-table-link">{{d.geneName}}</a></div>'}
+                ,{field: 'geneID', title: '基因ID', width:100, sort: true,templet: function(d){
+                        if(d.geneID==null)
+                            return  d.title || '';
+                        else
+                            return d.title=d.geneID
+                    }}
+                ,{field: 'tumorSuppressor', title: '抑癌基因', width:100, sort: true, templet: function(d){
+                    if(d.tumorSuppressor=='-'||d.tumorSuppressor==null)
+                        return  d.title || '';
+                    else
+                        return d.title=d.tumorSuppressor
+                }}
+                , {field: 'oncogene', title: '致癌基因', width: 100, sort: true, templet: function (d) {
+                        if (d.oncogene == '-'||d.oncogene == null)
+                            return d.title || '';
+                        else
+                            return d.title = d.oncogene
+                    }
+                }
+                ,{field: 'geneDescCHN', title: '基因描述'}
+                ,{field: 'highLevelSen', title: '最高用药等级', width: 140, sort: true,templet: function(d){
+                        if(d.highLevelSen=='-')
+                            return  d.title || '';
+                        else
+                            return d.title=d.highLevelSen
+                    }}
+                ,{field: 'highLevelRes', title: '最高耐药等级', width: 140, sort: true,templet: function(d){
+                        if(d.highLevelRes=='-')
+                            return  d.title || '';
+                        else
+                            return d.title=d.highLevelRes
+                    }}
+            ]]
+
+            , done : function (res, curr, count) {
+                var that = this.elem.next();
+                var tab = that.find(".layui-table-box").css("border-bottom", "3px solid #39A09C");
+                var th = that.find(".layui-table-header thead th").css("border-bottom", "3px solid #39A09C");
+                th.css("border-top", "3px solid #39A09C");
+                res.data.forEach(function (item,index) {
+                    if(index%2==0){
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#D8EBEA");
+                    } else{
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "white");
+                    }
+
+                })
+            }
+
+/*            ,done:function (res) {
+                var data = res.data;
+                for (var i = 0; i < data.length; i++) {
+                    var v = data[i];
+                    if(v.tumorSuppressor=="-"){
+                        rowUpdate('demo',0,{tumorSuppressor:'test'});
+                    }
+                }
+            }*/
+
+        });
+
+        table.on('sort(test)', function(obj){ //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            console.log(obj.field); //当前排序的字段名
+            console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+            console.log(this); //当前排序的 th 对象
+
+            //尽管我们的 table 自带排序功能，但并没有请求服务端。
+            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+            tableObj.reload({
+                initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                ,where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                    field: obj.field //排序字段
+                    ,order: obj.type //排序方式
+                }
+            });
+        });
+
+        $("#searchBt").click(function(){
+            tableObj.reload({
+                where :{
+                    geneName : $("#name").val()
+                }
+            });
+        });
+
+    });
+
+    selectGene();
+    function selectGene() {
+        $.ajax({
+            type : 'get',
+            url : '/gad/selectGene',
+            async : false,
+            success : function(data) {
+                var select = $("#select");
+                for (var i = 0; i < data.length; i++) {
+                    var v = data[i];
+                    select.append("<option value='"+v.geneName+"'></option>")
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

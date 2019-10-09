@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>LCCDB</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.css" media="all" />
+    <style>
+        .footer .foot-contact h5 {
+            font-size: 1.5em;
+            color: #333;
+            line-height: 2em;
+            padding-bottom: 3px;
+            margin: 0px;
+        }
+        h5 {
+            display: block;
+            font-size: 0.83em;
+            margin-block-start: 1.67em;
+            margin-block-end: 1.67em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            font-weight: bold;
+        }
+        .footer .foot-contact {
+            text-align: left;
+            width: 22%;
+            float: left;
+        }
+        .footer {
+            font-size: 12px;
+            background: #f3f3f3;
+        }
+
+        .footer .foot_lmnav {
+            padding-top: 0px;
+            width: 24%;
+            float: left;
+            margin-left: 1%;
+            text-align: left;
+        }
+
+        .footer .foot_lmnav li a:hover, a:visited {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer .foot-contact li {
+            font-size: 1em;
+            line-height: 2em;
+            color: #666;
+        }
+
+        .footer .foot-contact li i {
+            font-style: normal;
+            float: left;
+        }
+
+        .footer .foot-contact li em {
+            font-style: normal;
+            display: table;
+        }
+
+        .footer .foot_lmnav li a {
+            font-size: 12px;
+            color: #999;
+            line-height: 25px;
+            text-decoration: none;
+        }
+
+        h2 {
+            display: block;
+            font-size: 1.5em;
+            margin-block-start: 0.83em;
+            margin-block-end: 0.83em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            font-weight: bold;
+        }
+
+        .footer .foot_text {
+            height: 40px;
+            line-height: 40px;
+            background: #333;
+            color: #fff;
+            clear: both;
+        }
+
+        .clear {
+            display: none;
+        }
+
+        .layui-input::-ms-clear {
+            display: none;
+        }
+
+        .layui-input:valid + .clear {
+            display: inline;
+        }
+
+    </style>
+</head>
+
+<body onload="init()">
+<div class="layui-header" id="layui-header">
+    <!-- 头部区域 -->
+<!--    <div class="logo" style="float:left;left: 20px" >
+        <span style="font-size: 20px;color:blue; font-weight: bold;margin-left: 50px;line-height: 50px">主页logo</span>
+    </div>-->
+    <ul id="menu" class="layui-nav" style="background-color: #2D6F7F;height: 100%">
+        <li class="layui-nav-item" style="width: 15%;margin-left: 17.5%"><a href="javascript:;" data-url="genesSearch.html" style="text-align: center;font-size: 16px">主页</a></li>
+        <li class="layui-nav-item" style="width: 15%;margin-left: 5%"><a href="javascript:;" data-url="genesList.html" style="text-align: center;font-size: 16px">基因列表</a></li>
+        <li class="layui-nav-item" style="width: 15%;margin-left: 5%"><a href="javascript:;" data-url="targets.html?drugName=" style="text-align: center;font-size: 16px">药物/癌种</a></li>
+        <li class="layui-nav-item layui-hide-xs" style="margin-left: 5%;height: 46%;width: 15%" lay-unselect="">
+            <input id="name1" type="text" placeholder="这里搜索基因ID或名称..." style="float: left;height: 100%;width: 100%" class="layui-input layui-input-search" onchange="search1()" list="select1" oninput="clearInput(this);" required>
+            <div class="clear" style="float: left;width: 10%;height:100%;cursor:pointer;margin-left: -15%;margin-top: -7%">
+                <i class="layui-icon" href="javascript:;" id="clear1" onclick="clearBtn()" style="color: black;font-size: 20px">&#x1006;</i>
+            </div>
+            <datalist type="text" id="select1"></datalist>
+        </li>
+
+        <!--<div class="layui-select-title" style="float: right;width: 10%;height: 40%;margin-top: 1%;margin-right: 5%;">
+&lt;!&ndash;            <input id = "name1" type="text" style="height:100%;background-color:#d8ebeb;padding-left:10px;" placeholder="查询基因(ID/名称)" class="layui-input" list="select1">&ndash;&gt;
+            <input type="text" placeholder="查询基因(ID/名称)" autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="searchResult.html?geneName=" list="select1">
+            <datalist type="text" id="select1"></datalist>
+        </div>-->
+        <!--<div class="layui-select-title"><input type="text" placeholder="搜索组件或模块" value="" class="layui-input"><i class="layui-edge"></i></div>-->
+    </ul>
+</div>
+
+<div class="main dynamic-navigation"  id="n-b">
+    <div class="markdown-body editormd-html-preview" id="admin-body">
+        <div class="admin-nav-card layui-tab-brief" >
+
+                <div class="layui-tab-item layui-show" id="iframeContent">
+                    <iframe id="main" name="main" src="" style="overflow:visible;min-height:600px;width:99.7%;height:100%;" onload="iframLoad(this)">
+                    </iframe>
+                </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="bottom" class="footer" style="background-color:ghostwhite;float:left;height: 200px;width: 100%;margin-top: 2%">
+    <div class="w1200_center" id="footer-text">
+        <div class="foot-contact" style="float: left;width: 20%;margin-left: 10%">
+            <h5>杭州联川生物技术股份有限公司</h5>
+            <ul>
+                <li><i>地址：</i><em>杭州经济技术开发区下沙6号大街260号中自科技园16幢4层</em></li>
+                <li><i>总机：</i><em> 0571-87662413</em></li>
+                <li><i>传真：</i><em> 0571-81951905</em></li>
+                <li><i>邮箱：</i><em> market@lc-bio.com</em></li>
+            </ul>
+        </div>
+
+        <div class="foot_2wn" style="float: left;width: 18%;margin-left: 2%;margin-top: 2%">
+            <div style="float: left;text-align: center">
+                <img src="img/sw_code.png" style="width: 90px">
+                <br>联川生物
+            </div>
+            <div style="float: left;margin-left: 20px;text-align: center">
+                <img src="img/2wm.png" style="width: 90px">
+                <br>联川诊断
+            </div>
+
+        </div>
+
+        <div class="foot_nav" style="float: left;width: 40%">
+            <ul class="foot_lmnav" style="float: left">
+                <h2>关于我们<div style="background: #39A09C;width: 20px;height: 5px"></div></h2>
+                <li>
+                    <a title="公司介绍" href="http://www.lc-bio.com/about/54.html">公司介绍</a>
+                </li>
+                <li>
+                    <a title="企业文化" href="http://www.lc-bio.com/about/102.html">企业文化</a>
+                </li>
+                <li>
+                    <a href="http://www.lc-bio.com/honor.html">荣誉资质</a>
+                </li>
+                <li>
+                    <a title="发展历程" href="http://www.lc-bio.com/history.html">发展历程</a>
+                </li>
+                <li>
+                    <a href="http://www.lc-bio.com/job.html">人才招聘</a>
+                </li>
+                <li>
+                    <a title="联系我们" href="http://www.lc-bio.com/about/55.html">联系我们</a>
+                </li>
+
+            </ul>
+
+            <ul class="foot_lmnav" style="float: left">
+                <h2>基因检测<div style="background: #39A09C;width: 20px;height: 5px"></div></h2>
+                <span class="foot_x"></span>
+                <li><a href="http://www.lc-bio.com/Customized.html">定制产品</a></li>
+                <li><a href="http://www.lc-bio.com/health.html">健康管理</a></li>
+                <li><a href="http://www.lc-bio.com/reagent.html">检测试剂</a></li>
+
+            </ul>
+
+            <ul class="foot_lmnav" style="float: left">
+                <h2>科技服务<div style="background: #39A09C;width: 20px;height: 5px"></div></h2>
+                <span class="foot_x"></span>
+                <li><a href="http://www.lc-bio.com/Techservices.html">科技服务</a></li>
+                <li><a href="http://www.lc-bio.com/techpro.html">科技产品</a></li>
+
+            </ul>
+
+            <ul class="foot_lmnav" style="float: left">
+                <h2>市场与招商<div style="background: #39A09C;width: 20px;height: 5px"></div></h2>
+                <span class="foot_x"></span>
+                <li><a href="http://www.lc-bio.com/news/109.html">科技服务</a></li>
+                <li><a href="http://www.lc-bio.com/news/108.html">基因检测</a></li>
+                <li><a href="http://www.lc-bio.com/news/3.html">新闻中心</a></li>
+                <li><a href="http://www.lc-bio.com/news/4.html">市场活动</a></li>
+                <li><a href="http://www.lc-bio.com/down/26.html">资源中心</a></li>
+            </ul>
+        </div>
+        <div id="clear"></div>
+    </div>
+
+    <div class="foot_text" style="margin-top: 220px">
+        <div class="w1200_center">
+            <div class="foot_tl" style="float: left;margin-left: 32%">
+                杭州联川生物技术股份有限公司. All Rights Reserved.
+            </div>
+            <div class="foot_tr" style="float: left;margin-left: 5%">浙ICP备15020535号</div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="layui/layui.js"></script>
+<script type="text/javascript" src="js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/jq.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/onload.js"></script>
+<script type="text/javascript">
+/*    layui.use('element', function(){
+        var element = layui.element;
+        $("#menu li:first a").click();
+
+    });*/
+
+    init();
+    function init() {
+        $("#menu li:first a").click();
+    }
+
+    selectGene();
+    function selectGene() {
+        $.ajax({
+            type : 'get',
+            url : '/gad/selectGene',
+            async : false,
+            success : function(data) {
+                var select = $("#select1");
+
+                for (var i = 0; i < data.length; i++) {
+                    var v = data[i];
+                    select.append("<option value='"+v.geneName+"'>"+v.geneID+"</option>")
+                }
+            }
+        });
+    }
+
+    function search1() {
+        if($("#name1").val()!="") {  //判断搜索框是否为空
+            var name = $("#name1").val();
+            //$("#name1").attr("data-url","searchResult.html?geneName=" + name);
+            main.location.href = "searchResult.html?geneName=" + name;
+            //history.pushState("","","searchResult.html?geneName="+name);
+        }
+    }
+
+    function clearBtn(){
+        /*$("#name1").val("");
+        name = $("#name1").val('');*/
+        $("#name1").val("");
+
+    }
+
+    $("#name1").keydown(function(e) {
+        if (e.keyCode == 13) {
+            if($("#name1").val()==""){  //判断搜索框是否为空
+                layer.confirm('药物名称/ID不能为空!', {
+                    btn : [ '确定']
+                });
+            }
+        }
+    });
+
+    /*window.onresize = function () {
+        reinitIframe();
+    }
+    function reinitIframe(){
+        var iframe = document.getElementById("main");
+        try{
+            var bHeight = iframe.contentWindow.document.body.scrollHeight;
+            var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+            var height = Math.min(bHeight, dHeight);
+            iframe.height = height+80;
+            // console.log(iframe.height);
+        }catch (ex){}
+    }*/
+
+    function calcPageHeight(doc) {
+        var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
+        var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
+        var height  = Math.max(cHeight, sHeight)
+        return height
+    }
+    //根据ID获取iframe对象
+
+
+
+
+/*window.setInterval("ifr.onload()", 200);*/
+
+
+
+
+/*function clearInput(obj) {
+    var clearObj = document.getElementById("clear-input"); //动态生成的图标对象
+
+    if(obj.value.length>0){//开始输入时动态生成
+
+        if(!document.body.contains(clearObj)){//判断图标对象是否存在
+
+            var newNode = document.createElement("i");
+            newNode.setAttribute("class","layui-icon");
+            newNode.setAttribute("id","clear-input");
+            newNode.setAttribute("style","float: right;width: 10%;height:100%;cursor:pointer;margin-left: -15%;margin-top: -7%");
+            newNode.innerHTML = "&#x1006;";
+
+            obj.parentNode.insertBefore(newNode,obj);//js只有insertBefore，所以通过定位实现到最右边
+        }
+    }else{
+        obj.parentNode.removeChild(clearObj); //移除图标对象
+    }
+}*/
+</script>
+</body>
+</html>

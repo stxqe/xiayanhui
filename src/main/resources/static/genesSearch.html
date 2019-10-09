@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GenesSearch</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="layui/css/layui.css">
+    <style type="text/css">
+        .form-control::-ms-input-placeholder{
+            font-size: 18px;
+            text-align: center;
+        }
+        .form-control::-webkit-input-placeholder{
+            font-size: 18px;
+            color: #6ab4c6;
+            text-align: center;
+        }
+
+
+    </style>
+</head>
+<body style="height: 100%">
+
+<!--<div style="float: left;width: 98%">
+    <div style="background-color: #1E9FFF;color:white;width: 100px;height: 60px;float: left; margin-left: 20px;margin-top: 20px; text-align: center ; line-height: 60px">主页logo</div>
+    <div style="float: right; width: 300px;color:white;height: 60px;background-color: black;text-align: center;line-height: 60px;margin-top: 20px">导航栏</div>
+</div>-->
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div style="float:left;width: 96.5%;height:30%; margin-left:20px;margin-top:1.5%">
+        <div style="text-align: center"><img style="width: 50%;height: 50%" src="img/logo-03.png"></div><br>
+        <div style="width: 45%;margin: 0 auto;margin-top: -1%">
+            <span style="font-size: 16px;margin-left: 40px;color: #2D6F7F"><p style="text-indent: 2em">经过十年的快速发展，基因测序已经成为临床上肿瘤患者常规癌症治疗的一个组成部分，但是，解读个体肿瘤基因组上基因突变的临床意义目前依然是一个挑战。肿瘤学数据库依据FDA文件、NCCN指南、ASCO或ESMO会议论文、专家共识、科学文献等对肿瘤相关基因、突变、药物和治疗方法进行收录整理，现已收录1256个基因的相关信息，4094个不同的突变信息，211种药物信息以及286条具有临床指导意义的靶向用药信息，目标是全面准确地解释肿瘤变异的临床相关性。</p></span>
+        </div>
+    </div>
+    <div class="recharge_detail" style="float:left;width: 78%;height:10%;margin-top: 2%;margin-left: 18%">
+<!--        <form class="form-search" style="float: left;position: absolute;left: 20%">-->
+            <input class = "form-control" id = "name1" onchange="search1()" type="text" style="background-color:#d8ebeb; float: left;height: 45px;width: 30%; padding-left:10px" placeholder="查询基因(ID/名称)" list="select1">
+            <datalist type="text" id="select1"></datalist>
+            <button id="searchBt1" onclick="onclickSearch1()" class="layui-btn  layui-btn-lg" style="background-color: #2D6F7F;float: left"><i class="layui-icon">&#xe615;</i>搜索</button>
+            <input class = "form-control" id = "name2" onchange="search2()" type="text" style="background-color:#d8ebeb;float:left;margin-left: 20px;height: 45px;width: 30%; padding-left:10px" placeholder="查询药物"  list="select2">
+            <datalist type="text" id="select2"></datalist>
+            <button id="searchBt2" onclick="onclickSearch2()" class="layui-btn  layui-btn-lg" style="background-color: #2D6F7F;float: left"><i class="layui-icon">&#xe615;</i>搜索</button>
+<!--        </form>-->
+    </div>
+    <div style="float: left;width: 90%;margin-top: 2%;height: 60%;margin-left: 5%">
+        <img style="margin-left: 8.35%;width: 26.2%;height: 30%;box-shadow: 3px 3px 5px #bfbfbf" alt="" src="img/different_oncogenicity_gene_alt_count.png">
+        <img style="margin-left: 2.35%;width: 26.2%;height: 30%;box-shadow: 3px 3px 5px #bfbfbf" alt="" src="img/first10_gene_alt_oncogenicity.png">
+        <img style="margin-left: 2.35%;width: 26.2%;height: 30%;box-shadow: 3px 3px 5px #bfbfbf" alt="" src="img/levels_information.png">
+    </div>
+</div>
+
+<script type="text/javascript" src="layui/layui.js"></script>
+<script type="text/javascript" src="js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/jq.js"></script>
+<script>
+
+
+    selectGene();
+    function selectGene() {
+        $.ajax({
+            type : 'get',
+            url : '/gad/selectGene',
+            async : false,
+            success : function(data) {
+                var select = $("#select1");
+
+                for (var i = 0; i < data.length; i++) {
+                    var v = data[i];
+                    select.append("<option value='"+v.geneName+"'>"+v.geneID+"</option>")
+                }
+            }
+        });
+    }
+
+    selectDrug();
+    function selectDrug() {
+        $.ajax({
+            type : 'get',
+            url : '/drug/selectDrug',
+            async : false,
+            success : function(data) {
+                var select = $("#select2");
+                for (var i = 0; i < data.length; i++) {
+                    var v = data[i];
+                    select.append("<option value='"+v.drugName+"'>"+v.drugNameCHN+"</option>")
+                }
+            }
+        });
+    }
+    
+    function search1() {
+        if($("#name1").val()!="") {  //判断搜索框是否为空
+            var name = $("#name1").val();
+            window.location.href = "searchResult.html?geneName=" + name;
+            $("#name1").val("");
+        }
+    }
+
+    function search2() {
+        if($("#name2").val()!="") {
+            var name = $("#name2").val();
+            window.location.href = "targets.html?drugName=" + name;
+            $("#name2").val("");
+        }
+    }
+
+    layui.use('layer', function(){
+        var layer = layui.layer;
+    });
+
+    function onclickSearch1(){
+        if($("#name1").val()!="") {
+            search1();
+        }
+        else {
+            layer.confirm('基因名称/ID不能为空!', {
+                btn : [ '确定']
+            });
+        }
+    }
+
+    function onclickSearch2(){
+        if($("#name1").val()!="") {
+            search2();
+        }
+        else {
+            layer.confirm('药物名称/ID不能为空!', {
+                btn : [ '确定']
+            });
+        }
+    }
+
+    $("#name1").keydown(function(e) {
+        if (e.keyCode == 13) {
+            if($("#name1").val()==""){  //判断搜索框是否为空
+                layer.confirm('药物名称/ID不能为空!', {
+                    btn : [ '确定']
+                });
+            }
+            else {
+                search1();
+                return false;
+            }
+            //location.href="searchResult.html?geneName="+name;
+        }
+    });
+
+    $("#name2").keydown(function(e) {
+        if (e.keyCode == 13) {
+            if($("#name2").val()==""){
+                layer.confirm('药物名称/ID不能为空!', {
+                    btn : [ '确定']
+                });
+            }
+            else {
+                search2();
+                return false;
+            }
+            //location.href="searchResult.html?geneName="+name;
+        }
+    });
+
+    //回车事件有问题
+    /*$("#name").keypress(function (e) {
+        if (e.which == 13) {
+            /!*alert('你输入的内容为：' + $('#name').val());*!/
+            var name =$("#name").val();
+            window.location.href="searchResult.html?geneName="+name;
+            //window.open('searchResult.html');
+        }
+    });*/
+
+
+</script>
+</body>
+</html>

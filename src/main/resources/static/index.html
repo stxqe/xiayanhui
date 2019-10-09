@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="layui/css/global.css" media="all" />
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.css" media="all" />
+</head>
+<body>
+<div class="layui-header" id="layui-header" style="height: 80px">
+    <span style="font-size: 20px;color:white; font-weight: bold;margin-left: 50px;line-height: 60px">主页logo</span>
+    <ul id="menu" class="layui-nav layui-bg-cyan">
+        <li class="layui-nav-item">
+            <a href="javascript:;" onclick="genesSearch()">
+                <cite>主页</cite>
+            </a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;" data-url="pages/genes.html">基因查询
+            </a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;" data-url="targets.html">
+                <cite>药物/癌种</cite>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!--<div class="footer" style="background-color: #2a2725;float:left;height: 200px;width: 100%;margin-top: 1000px">
+   <div class="container">
+        <div class="row footer-row-1">
+            <p class="warning-usage-terms">OncoKB is intended for research purposes only. Please review the <a href="terms"><u class="usage-terms-linkout">usage terms</u></a> before continuing.</p>
+            <div class="citation ng-binding" ng-bind-html="data.citationURL">When using OncoKB, please cite: <a href="http://ascopubs.org/doi/full/10.1200/PO.17.00011" target="_blank">Chakravarty et al., JCO PO 2017</a>.
+            </div>
+            <div class=""> <a href="https://www.mskcc.org" target="_blank">MSK <i class="fa fa-external-link"></i></a> <a href="https://www.mskcc.org/research-areas/programs-centers/molecular-oncology" target="_blank">CMO <i class="fa fa-external-link"></i></a> <a href="http://www.questdiagnostics.com/home.html" target="_blank">Quest Diagnostics <i class="fa fa-external-link"></i></a> <a href="https://www.cbioportal.org" target="_blank">cBioPortal <i class="fa fa-external-link"></i></a> <a href="http://oncotree.mskcc.org" target="_blank">OncoTree <i class="fa fa-external-link"></i></a>
+            </div>
+        </div>
+        <div class="row footer-row-2">
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
+                <div class="">
+                    <a href="terms" class="">Usage Terms</a>
+                    <a href="mailto:contact@oncokb.org" target="_top">Contact us</a>
+                    <a href="https://twitter.com/OncoKB" target="_blank">Twitter</a>
+                    <a href="api/v1/swagger-ui.html" target="_blank">API</a>
+                </div>
+                <p style="margin-top: -30px">
+                    <a href="news" class="ng-binding">Last update: August 28, 2019</a>
+                </p>
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 mskcc-footer-logo0-wrapper">
+                <a class="logo" href="http://mskcc.org" title="Memorial Sloan Kettering Cancer Center">
+                    <span>
+                    </span>
+                </a>
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 mskcc">
+                <span>© 2019 Memorial Sloan Kettering Cancer Center</span>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="layui/layui.js"></script>
+<script type="text/javascript" src="js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/jq.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+
+<script>
+    layui.use('element', function(){
+        var element = layui.element;
+        //$("#menu li:first a").click();
+
+    });
+
+    function genesSearch(){
+        window.location='genesSearch.html';
+
+    }
+</script>
+</body>
+</html>

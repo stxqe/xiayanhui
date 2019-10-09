@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.TargetsDao">
+
+    <sql id="where"> <!-- <sql>标签 目的达到代码复用 -->
+        <where>
+            <if test="selectGene != null and selectGene != ''">
+                t.GeneName like concat('%', #{selectGene}, '%')
+                <!-- t.animalName = #{userName} -->
+            </if>
+            <if test="selectType != null and selectType != ''">
+                and t.CanTypeCHN like concat('%', #{selectType}, '%')
+            </if>
+            <if test="selectDrug != null and selectDrug != ''">
+                and t.Drug like concat('%', #{selectDrug}, '%')
+            </if>
+            <if test="selectLevel != null and selectLevel !=''">
+                and t.Level = #{selectLevel}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="where2"> <!-- <sql>标签 目的达到代码复用 -->
+        <where>
+            <if test="geneName != null and geneName != ''">
+                GeneName like concat('%', #{geneName}, '%')
+            </if>
+            <if test="alteration != null and alteration != ''">
+                and Alteration like concat('%', #{alteration}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <sql id="where3"> <!-- <sql>标签 目的达到代码复用 -->
+        <where>
+            <if test="geneName != null and geneName != ''">
+                GeneID like concat('%', #{geneName}, '%')
+            </if>
+            <if test="alteration != null and alteration != ''">
+                and Alteration like concat('%', #{alteration}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <!--<select id="selectCount" resultType="int">
+        select count(1) from animal_active t
+        <include refid="where" />
+    </select>-->
+
+    <select id="getTargetsSelectOrder" resultType="com.example.demo.model.Targets">
+        SELECT level, geneName, alteration, canTypeCHN, drug, evidenceCHN from Target t
+        <include refid="where" />
+        <choose>
+            <when test="field != null and field != ''">ORDER BY ${field} ${order}</when>
+            <otherwise>ORDER BY level , geneName , alteration</otherwise>
+        </choose>
+    </select>
+
+    <select id="getTargetsSelect" resultType="com.example.demo.model.Targets">
+        SELECT Level, GeneName, Alteration, CanTypeCHN, Drug, EvidenceCHN from Target t
+        <include refid="where" />
+        ORDER BY Level, GeneName, Alteration
+
+    </select>
+
+    <select id="getGeneSelect" resultType="com.example.demo.model.Targets">
+        select t.GeneName,t.CanTypeCHN,t.Drug from Target t
+        <include refid="where" />
+        ORDER BY Level, GeneName, Alteration
+    </select>
+
+    <select id="getAboutGene" resultType="com.example.demo.model.Targets">
+        SELECT Alteration, CanTypeCHN, Drug, DrugCHN, Level, EvidenceCHN, PMIDs FROM Target
+        <include refid="where2" />
+        <choose>
+            <when test="field != null and field != ''">ORDER BY ${field} ${order}</when>
+            <otherwise>ORDER BY level</otherwise>
+        </choose>
+    </select>
+
+    <select id="getAboutGeneID" resultType="com.example.demo.model.Targets">
+        SELECT Alteration, CanTypeCHN, Drug, DrugCHN, Level, EvidenceCHN, PMIDs FROM Target
+        <include refid="where3" />
+        <choose>
+            <when test="field != null and field != ''">ORDER BY ${field} ${order}</when>
+            <otherwise>ORDER BY level</otherwise>
+        </choose>
+    </select>
+
+    <select id="getAboutVar" resultType="com.example.demo.model.GeneVariations">
+        SELECT Alteration, OncogenicityCHN, MutEffectCHN, VarSummaryCHN, PMIDs FROM GeneVariations
+        <include refid="where2" />
+        <choose>
+            <when test="field != null and field != ''">ORDER BY ${field} ${order}</when>
+            <otherwise>ORDER BY alteration</otherwise>
+        </choose>
+    </select>
+
+    <select id="getAboutVarID" resultType="com.example.demo.model.GeneVariations">
+        SELECT Alteration, OncogenicityCHN, MutEffectCHN, VarSummaryCHN, PMIDs FROM GeneVariations
+        <include refid="where3" />
+        <choose>
+            <when test="field != null and field != ''">ORDER BY ${field} ${order}</when>
+            <otherwise>ORDER BY alteration</otherwise>
+        </choose>
+    </select>
+
+</mapper>

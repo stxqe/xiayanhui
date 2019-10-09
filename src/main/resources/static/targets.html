@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Targets</title>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <style type="text/css">
+        .clear {
+            display: none;
+/*            position: absolute;
+            top: 300px;
+            left: 22%;*/
+        }
+
+        .input::-ms-clear {
+            display: none;
+        }
+
+        .input:valid + .clear {
+            display: inline;
+        }
+    </style>
+</head>
+<body id="TarMain" style="height: 100%;margin:0; padding:0">
+    <div style="float: left;margin-left:6%;width: 88%;height: 10%;border-bottom: solid 2px #398C9C;background-color:white">
+        <img style="width: 30%;height: 30%" src="img/logo-03.png">
+        <div style="background: #39A09C;width: 5px;height: 16px;float:right;margin-top: 3.8%"></div>
+        <div style="font-family: PingFangSC-Medium;font-size: 18px;color: #485465;line-height: 20px;margin-right: 10px;margin-top: 3.6%;float: right;">靶向</div>
+    </div>
+
+
+    <div style="float:left;margin-left: 15%;width: 70%;height: 20%;margin-top: 1.5%">
+        <input id="passLevel" style="display: none">
+        <div id="level1" style="float:left;width:12%;margin-left:2%;text-align: center">
+            <img style="width: 100%;height: 100%;cursor:pointer" src="img/level01.png">
+            <a href="javascript:;"style="font-size: 10px;color: #56818A"><div style="margin-top: 10px">FDA批准<br>23个基因<br>88条用药信息</div></a>
+        </div>
+        <div id="level2" style="float:left;margin-left: 4%;width:12%;text-align: center">
+            <img style="width: 100%;height: 100%;cursor:pointer" src="img/level02.png">
+            <a href="javascript:;"style="font-size: 10px;color: #56818A"><div style="margin-top: 10px">标准治疗<br>11个基因<br>52条用药信息</div></a>
+        </div>
+        <div id="level3" style="float:left;margin-left: 4%;width:12%;text-align: center">
+            <img style="width: 100%;height: 100%;cursor:pointer" src="img/level03.png">
+            <a href="javascript:;"style="font-size: 10px;color: #56818A"><div style="margin-top: 10px">临床证据<br>25个基因<br>74条用药信息</div></a>
+        </div>
+        <div id="level4" style="float:left;margin-left: 4%;width:12%;text-align: center">
+            <img style="width: 100%;height: 100%;cursor:pointer" src="img/level04.png">
+            <a href="javascript:;"style="font-size: 10px;color: #56818A"><div style="margin-top: 10px">生物学证据<br>19个基因<br>40条用药信息</div></a>
+        </div>
+        <div id="levelR1" style="float:left;margin-left: 4%;width:12%;text-align: center">
+            <img style="width: 100%;height: 100%;cursor:pointer" src="img/levelR1.png">
+            <a href="javascript:;"style="font-size: 10px;color: #56818A"><div style="margin-top: 10px">标准治疗<br>5个基因<br>15条用药信息</div></a>
+        </div>
+        <div id="levelR2" style="float:left;margin-left: 4%;width:12%;text-align: center">
+            <img style="width: 100%;height: 100%;cursor:pointer" src="img/levelR2.png">
+            <a href="javascript:;"style="font-size: 10px;color: #56818A"><div style="margin-top: 10px">临床证据<br>6个基因<br>17条用药信息</div></a>
+        </div>
+
+    <!--<div style="float:left;margin-left: 2%;width: 14.2%;height: 120px;background-color: #01AAED;box-shadow: 5px 5px 2px #8c8c8c;border: 2px;border-radius: 20px;text-align: center">
+        <a id="levelR2" href="javascript:;"><div style="margin-top: 18px">等级R2<br>临床证据<br>6个基因<br>17条用药信息</div></a>
+    </div>-->
+    </div>
+<div style="float: left;margin-left: 11%;margin-top: 1.5%;width: 80%;height: 10%">
+    <input id="gene" class="input" type="text" style="height: 30px;width: 29%; padding-left:10px;border: 1px;box-shadow: 3px 3px 5px #bfbfbf" placeholder="genes" list="select1" required>
+    <div class="clear" style="width: 80%;margin-left: -3%;cursor:pointer;">
+        <i class="layui-icon" href="javascript:;" id="clear1" onclick="cleared()">&#x1006;</i>
+    </div>
+    <datalist id="select1"></datalist>
+    <input id="type" type="text" class="input" style="height: 30px;width: 29%; padding-left:10px;margin-left: 3.3%;border: 1px;box-shadow: 3px 3px 5px #bfbfbf" placeholder="Types" list="select2" required>
+    <div class="clear" style="width: 80%;margin-left: -3%;cursor:pointer;">
+        <i class="layui-icon" href="javascript:;" id="clear2">&#x1006;</i>
+    </div>
+    <datalist id="select2"></datalist>
+    <input id="drug" type="text" class="input" style="height: 30px;width: 29%; padding-left:10px;margin-left: 3.3%;border: 1px;box-shadow: 3px 3px 5px #bfbfbf" placeholder="drugs" list="select3" required>
+    <div class="clear" style="width: 80%;margin-left: -3%;cursor:pointer;">
+        <i class="layui-icon" href="javascript:;" id="clear3">&#x1006;</i>
+    </div>
+    <datalist id="select3"></datalist>
+</div>
+
+<div style="float: left;margin-left:6%;margin-top: 1%;width: 88%;background-color:#D8EBEA">
+    <div id="drugMsg" style="display: none;padding: 15px"></div>
+</div>
+<div id="layTable" style="float: left;margin-left: 6%;width: 88%;height: 480px">
+    <table id="demo" lay-filter="test" style="border:1px solid green;"></table>
+</div>
+
+<script type="text/javascript" src="js/libs/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/jq.js"></script>
+<script src="js/onload.js"></script>
+<script src="layui/layui.js"></script>
+
+<script>
+
+    init();
+    function init(){
+        var passDrugName = getUrlParam("drugName");
+        if(passDrugName==undefined)
+            passDrugName="";
+        var passLevel = getUrlParam("level");
+        var name1 = decodeURI(passDrugName);
+        search(name1);
+        $("#drug").val(name1);
+    }
+
+    function search(passDrugName){
+        var drugName = passDrugName;
+        if(drugName==null)
+            drugName = $("#drug").val();
+        if (drugName=="")
+            $("#drugMsg").hide();
+        $.ajax({
+            type : 'get',
+            url : '/tar/drug/'+ drugName,
+            async : false,
+            success : function(data) {
+                if(data!='') {
+                    $("#drugMsg").show();
+                    $("#drugMsg").html("药物名： "+data.drugName+"</br>药物中文名： "+data.drugNameCHN+"</br>适应症： "+data.adaptationDisease+"</br>国内是否上市： "+data.domestic+"</br>生产公司： "+data.company+"</br>药物信息： "+data.drugDescCHN);
+                }
+            }
+            /*success: function (data) {
+                $("#result").html("基因： " + data.geneName + "</br>基因ID： " + data.geneID + "</br>是否致癌基因： " + data.oncogene + "</br>最高证据等级： Level " + data.highLevelSen + " Level " + data.highLevelRes + "</br>基因信息："+ data.geneDescCHN);
+            }*/
+        });
+    }
+
+    layui.use('table', function () {
+        var level = getUrlParam("level");
+        var table = layui.table;
+        //第一个实例
+        var tableObj = table.render({
+            elem: '#demo'
+            , height: '462'
+/*            , skin: 'row'*/
+            , url: '/tar/tarList' //数据接口
+            , autoSort: false
+            ,id: 'idTest'
+/*            ,page:true*/
+            , where: {
+                selectGene: $("#gene").val()
+                , selectType: $("#type").val()
+                , selectDrug: $("#drug").val()
+                , selectLevel: level
+            }
+/*            initSort: {
+                field: 'level' //排序字段，对应 cols 设定的各字段名
+                ,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+            }*/
+            , cols: [[ //表头
+                {field: 'level', title: '等级', width: 80, sort: true, fixed: 'left'}
+                , {field: 'geneName', title: '基因', width: 100, sort: true, templet: '<div><a href="searchResult.html?geneName={{d.geneName}}" class="layui-table-link">{{d.geneName}}</a></div>'}
+                , {field: 'alteration', title: '突变', width: 200, sort: true}
+                , {field: 'canTypeCHN', title: '癌种', width: 200, sort: true}
+                , {field: 'drug', title: '药物', width: 200, sort: true, templet: '<div><a href="targets.html?drugName={{d.drug}}" class="layui-table-link">{{d.drug}}</a></div>'}
+                , {field: 'evidenceCHN', title: '支持证据', sort: true}
+            ]]
+            , done : function (res, curr, count) {
+                var that = this.elem.next();
+                var tab = that.find(".layui-table-box").css("border-bottom", "3px solid #39A09C");
+                var th = that.find(".layui-table-header thead th").css("border-bottom", "3px solid #39A09C");
+                th.css("border-top", "3px solid #39A09C");
+                res.data.forEach(function (item,index) {
+                    if(index%2==0){
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#D8EBEA");
+                    } else{
+                        var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "white");
+                    }
+                    
+                })
+            }
+        });
+
+        /*
+         * 搜索框回车事件事件
+         */
+        var threeSearch = $("#gene, #type").change(function(){
+            tableObj.reload({
+                height: '462'
+                ,
+                where: {
+                    selectGene: $("#gene").val()
+                    , selectType: $("#type").val()
+                    , selectLevel: level
+                }
+            });
+            //location.href = "targets.html?drugName="+$("#drug").val();
+            selectGene();
+            search();
+/*            targets.html?drugName={{d.drug}}*/
+            /*location.reload();*/
+            /*$('#select1 option').remove();
+            $('#select2 option').remove();
+            $('#select3 option').remove();//去除下拉框选择后的弹出*/
+            level ="";//重置等级
+        });
+
+        $("#drug").change(function(){
+            var heighr = $("#drugMsg").height();
+            tableObj.reload({
+/*                height: '362'
+                ,*/
+                where: {
+                    selectDrug: $("#drug").val()
+                }
+            });
+/*            var height = $("#TarMain").height();*/
+/*            $("#layTable").css("height", "390px");*/
+            selectGene();
+            search();
+            drugMsgLoad();
+/*            iframLoad();*/
+
+            /*location.href = "targets.html?drugName="+$("#drug").val();*/
+            /*            targets.html?drugName={{d.drug}}*/
+            /*location.reload();*/
+            /*$('#select1 option').remove();
+            $('#select2 option').remove();
+            $('#select3 option').remove();//去除下拉框选择后的弹出*/
+            /*level ="";*///重置等级
+        });
+        /*
+         * 搜索框回车事件事件
+         */
+/*        $("#gene, #type, #drug").keydown(function(e) {
+
+            if (e.keyCode == 13) {
+                /!*search;*!/
+                $('#select1 option').remove();
+                $('#select2 option').remove();
+                $('#select3 option').remove();//去除下拉框选择后的弹出
+            }
+        });*/
+
+        /*
+         * 点击等级事件
+         */
+        $("#level1").click(function(){
+            level = "1";
+            selectLevrl();
+        })
+        $("#level2").click(function(){
+            level = "2A";
+            selectLevrl();
+        })
+        $("#level3").click(function(){
+            level = "3A";
+            selectLevrl();
+        })
+        $("#level4").click(function(){
+            level = "4";
+            selectLevrl();
+        })
+        $("#levelR1").click(function(){
+            level = "R1";
+            selectLevrl();
+        })
+        $("#levelR2").click(function(){
+            level = "R2";
+            selectLevrl();
+        })
+
+        /*
+         * 点击等级事件
+         */
+        function selectLevrl(){
+            tableObj.reload({
+                where :{
+                    selectLevel : level
+                }
+            });
+            selectGene();
+        }
+
+        //三组查询
+        selectGene();
+        function selectGene() {
+            /*
+             * 去除多余下拉框
+             */
+            $('#select1 option').remove();
+            $('#select2 option').remove();
+            $('#select3 option').remove();
+
+            $.ajax({
+                type : 'get',
+                url : '/tar/select',
+                data :{
+                    selectGene : $("#gene").val()
+                    ,selectType : $("#type").val()
+                    ,selectDrug : $("#drug").val()
+                    ,selectLevel : level
+                },
+                async : false,
+                success : function(data) {
+                    var select1 = $("#select1");
+                    var select2 = $("#select2");
+                    var select3 = $("#select3");
+                    var value1 = '' ;
+                    var value2 = '' ;
+                    var value3 = '' ;
+
+                    /*
+                     * 下拉框去重（indexOf)
+                     */
+                    for (var i = 0; i < data.length; i++) {
+                        var v = data[i];
+                        if(value1.indexOf(v.geneName[0])==-1){
+                            select1.append("<option value='" + v.geneName + "'></option>")
+                            value1 += v.geneName;
+                        }
+                        if(value2.indexOf(v.canTypeCHN[0])==-1){
+                            select2.append("<option value='" + v.canTypeCHN + "'></option>")
+                            value2 += v.canTypeCHN;
+                        }
+                        if(value3.indexOf(v.drug)==-1){
+                            select3.append("<option value='" + v.drug + "'></option>")
+                            value3 += v.drug;
+                        }
+                    }
+                }
+            });
+        }
+
+        $("#clear1").click(function(){
+            $("#gene").val("");
+            tableObj.reload( { where: {
+                    selectGene: $("#gene").val()
+                    , selectType: $("#type").val()
+                    , selectDrug: $("#drug").val()
+            }})
+            selectGene();
+        })
+
+        $("#clear2").click(function(){
+            $("#type").val("");
+            tableObj.reload( { where: {
+                    selectGene: $("#gene").val()
+                    , selectType: $("#type").val()
+                    , selectDrug: $("#drug").val()
+                }})
+            selectGene();
+        })
+
+        $("#clear3").click(function(){
+            $("#drug").val("");
+            tableObj.reload({ where: {
+                    selectGene: $("#gene").val()
+                    , selectType: $("#type").val()
+                    , selectDrug: $("#drug").val()
+                }})
+            selectGene();
+            $("#drugMsg").hide();
+        })
+
+
+        table.on('sort(test)', function(obj){ //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            console.log(obj.field); //当前排序的字段名
+            console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+            console.log(this); //当前排序的 th 对象
+
+            //尽管我们的 table 自带排序功能，但并没有请求服务端。
+            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+            table.reload('idTest',{
+                initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                ,where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                    field: obj.field //排序字段
+                    ,order: obj.type //排序方式
+                }
+            });
+        });
+
+    });
+
+/*    test();
+    function test(){
+        if(Request.QueryString["drugName"]!=null) {
+            alert("xixidd");
+        }
+    }*/
+    /*
+     * 药物信息框（没有查询到药物则不显示）
+     */
+
+
+
+    
+</script>
+</body>
+</html>
